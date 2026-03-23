@@ -1,0 +1,30 @@
+# Project Rules: Expense Tracker
+
+## Communication
+- **Communication Language:** Always chat with the user in **Polish**.
+- **Code & Documentation Language:** All code, variable names, comments, and commit messages must be in **English**.
+- **UI Language:** The application interface (labels, buttons, messages) must be in **English**.
+
+## Workflow & Memory Management
+- Always start by reading `MEMORY.md` to understand the current project state.
+- Update the 'Current Status' in `MEMORY.md` after completing every significant task.
+- Document any new libraries or architectural decisions in `MEMORY.md`.
+
+## Technical Stack Standards
+- **Framework:** Next.js (App Router). Use Server Components by default; use 'use client' only for interactive UI.
+- **Styling:** Tailwind CSS with **shadcn/ui** components.
+- **Database:** Prisma with SQLite. Run `npx prisma generate` after schema changes.
+- **Logic:** Use **Server Actions** for database mutations instead of API routes.
+- **Validation:** Use **Zod** for form and data validation.
+
+## UI/UX & Quality
+- Components must be placed in `@/components/ui` (shadcn standard).
+- Use **Lucide React** for icons.
+- Ensure Mobile First responsiveness.
+- All DB operations must be wrapped in try/catch blocks with user-friendly error handling.
+
+## Testing Standards
+- Use **Vitest** for unit and integration tests.
+- Place test files next to the tested component/logic using the `[name].test.ts` or `[name].test.tsx` convention.
+- For UI components, use **React Testing Library**.
+- Mock Prisma calls in unit tests to avoid hitting the actual database.
