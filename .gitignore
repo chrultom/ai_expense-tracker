@@ -6,6 +6,8 @@
 
 # Testing
 /coverage
+/playwright-report
+/test-results
 
 # Next.js
 /.next/
@@ -17,6 +19,7 @@
 # Misc
 .DS_Store
 *.pem
+.vscode/
 
 # Debug
 npm-debug.log*
@@ -40,6 +43,10 @@ next-env.d.ts
 # Prisma
 /prisma/dev.db
 /prisma/dev.db-journal
+test.db
+test.db-journal
+*.db
+*.db-journal
 
 # AI Agent memory and rules
 AGENTS.md

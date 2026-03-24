@@ -68,9 +68,9 @@ This repository includes a `.clinerules` file. It is intentionally tracked in th
 
 ## Roadmap / TODO
 
-- [ ] **Unit & Integration Tests:** Implement [Vitest](https://vitest.dev/) and React Testing Library for core logic and components.
-- [ ] **End-to-End (E2E) Tests:** Setup [Playwright](https://playwright.dev/) to test critical user flows.
-- [ ] **CI/CD Pipeline:** Configure [GitHub Actions](https://github.com/features/actions) for automated testing and linting on every push.
+- [x] **API Testing:** Implemented [Playwright](https://playwright.dev/) for REST API testing with isolated SQLite database.
+- [x] **CI/CD Pipeline:** Configured [GitHub Actions](https://github.com/features/actions) for automated testing on every push and manual triggers.
+- [ ] **End-to-End (E2E) Tests:** Setup [Playwright](https://playwright.dev/) to test critical UI user flows.
 - [ ] **Category Management:** Allow users to add/remove custom expense categories.
 
 
