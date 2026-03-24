@@ -27,7 +27,7 @@ test.describe('Expenses API', () => {
     expect(Array.isArray(body)).toBeTruthy();
     
     // Check if our test expense exists
-    const expense = body.find((e: any) => e.description === testExpense.description);
+    const expense = body.find((e: { description: string; amount: string | number }) => e.description === testExpense.description);
     expect(expense).toBeDefined();
     expect(Number(expense.amount)).toBe(testExpense.amount);
   });
@@ -39,7 +39,7 @@ test.describe('Expenses API', () => {
     const body = await response.json();
     expect(Array.isArray(body)).toBeTruthy();
     
-    const expense = body.find((e: any) => e.description === testExpense.description);
+    const expense = body.find((e: { description: string }) => e.description === testExpense.description);
     expect(expense).toBeDefined();
   });
 
@@ -48,7 +48,7 @@ test.describe('Expenses API', () => {
     expect(response.status()).toBe(200);
     const body = await response.json();
     
-    const expense = body.find((e: any) => e.description === testExpense.description);
+    const expense = body.find((e: { description: string }) => e.description === testExpense.description);
     expect(expense).toBeUndefined();
   });
 });

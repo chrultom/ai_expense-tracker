@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format, addMonths, subMonths } from 'date-fns';
 import {
   ChevronLeft,
@@ -69,7 +69,7 @@ export default function Dashboard() {
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [category, setCategory] = useState('');
 
-  const fetchExpenses = async () => {
+  const fetchExpenses = useCallback(async () => {
     setIsLoading(true);
     try {
       const month = currentDate.getMonth() + 1;
@@ -84,11 +84,11 @@ export default function Dashboard() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentDate]);
 
   useEffect(() => {
     fetchExpenses();
-  }, [currentDate]);
+  }, [fetchExpenses]);
 
   const handlePreviousMonth = () => setCurrentDate(subMonths(currentDate, 1));
   const handleNextMonth = () => setCurrentDate(addMonths(currentDate, 1));
@@ -296,7 +296,7 @@ export default function Dashboard() {
                         <Tooltip 
                           cursor={{ fill: '#f1f5f9' }}
                           contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                          formatter={(value: any) => [`$${Number(value || 0).toFixed(2)}`, 'Total']} 
+                          formatter={(value: number | string | readonly (string | number)[] | undefined) => [`$${Number(Array.isArray(value) ? value[0] : (value || 0)).toFixed(2)}`, 'Total']} 
                         />
                         <Bar dataKey="total" radius={[6, 6, 0, 0]} barSize={40}>
                           {expensesByCategory.map((entry, index) => (
