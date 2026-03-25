@@ -12,7 +12,9 @@ import {
   PlusCircle,
   Wallet,
   TrendingUp,
-  History
+  History,
+  BarChart3,
+  PieChart as PieChartIcon
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +35,9 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  PieChart,
+  Pie,
+  Legend,
 } from 'recharts';
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
@@ -56,6 +61,7 @@ const CATEGORIES = [
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [chartType, setChartType] = useState<'bar' | 'pie'>('bar');
 
   useEffect(() => {
     setMounted(true);
@@ -271,39 +277,79 @@ export default function Dashboard() {
                   <CardTitle>Spending Overview</CardTitle>
                   <CardDescription>Distribution by category</CardDescription>
                 </div>
-                <div className="bg-slate-100 p-2 rounded-full dark:bg-slate-800">
-                  <TrendingUp className="h-5 w-5 text-slate-500" />
+                <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg dark:bg-slate-800">
+                  <Button
+                    variant={chartType === 'bar' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => setChartType('bar')}
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={chartType === 'pie' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => setChartType('pie')}
+                  >
+                    <PieChartIcon className="h-4 w-4" />
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px] w-full mt-4 min-h-[300px]">
                   {expensesByCategory.length > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={expensesByCategory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                        <XAxis 
-                          dataKey="name" 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#64748b', fontSize: 12 }}
-                        />
-                        <YAxis 
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fill: '#64748b', fontSize: 12 }}
-                          tickFormatter={(value) => `$${value}`}
-                        />
-                        <Tooltip 
-                          cursor={{ fill: '#f1f5f9' }}
-                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                          formatter={(value: number | string | readonly (string | number)[] | undefined) => [`$${Number(Array.isArray(value) ? value[0] : (value || 0)).toFixed(2)}`, 'Total']} 
-                        />
-                        <Bar dataKey="total" radius={[6, 6, 0, 0]} barSize={40}>
-                          {expensesByCategory.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Bar>
-                      </BarChart>
+                      {chartType === 'bar' ? (
+                        <BarChart data={expensesByCategory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                          <XAxis 
+                            dataKey="name" 
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#64748b', fontSize: 12 }}
+                          />
+                          <YAxis 
+                            axisLine={false}
+                            tickLine={false}
+                            tick={{ fill: '#64748b', fontSize: 12 }}
+                            tickFormatter={(value) => `$${value}`}
+                          />
+                          <Tooltip 
+                            cursor={{ fill: '#f1f5f9' }}
+                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                            formatter={(value: number | string | readonly (string | number)[] | undefined) => [`$${Number(Array.isArray(value) ? value[0] : (value || 0)).toFixed(2)}`, 'Total']} 
+                          />
+                          <Bar dataKey="total" radius={[6, 6, 0, 0]} barSize={60}>
+                            {expensesByCategory.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      ) : (
+                        <PieChart>
+                          <Pie
+                            data={expensesByCategory}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={50}
+                            outerRadius={110}
+                            paddingAngle={5}
+                            dataKey="total"
+                            label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                            labelLine={true}
+                            cornerRadius={8}
+                          >
+                            {expensesByCategory.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                            ))}
+                          </Pie>
+                          <Tooltip 
+                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                            formatter={(value: number | string | readonly (string | number)[] | undefined) => [`$${Number(Array.isArray(value) ? value[0] : (value || 0)).toFixed(2)}`, 'Total']} 
+                          />
+                        </PieChart>
+                      )}
                     </ResponsiveContainer>
                   ) : (
                     <div className="flex h-full flex-col items-center justify-center text-muted-foreground space-y-2 border-2 border-dashed rounded-xl">
